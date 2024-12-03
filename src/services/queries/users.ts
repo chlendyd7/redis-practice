@@ -5,7 +5,11 @@ import { usersKey } from '$services/keys';
 
 export const getUserByUsername = async (username: string) => {};
 
-export const getUserById = async (id: string) => {};
+export const getUserById = async (id: string) => {
+    const user = await client.hGetAll(usersKey(id));
+
+    return deserialize(id, user);
+};
 
 export const createUser = async (attrs: CreateUserAttrs) => {
     const id = genId();
@@ -19,3 +23,11 @@ const serialize = (user: CreateUserAttrs) => {
         password: user.password
     };
 }
+
+const deserialize = (id: string, user: { [key: string]: string}) => {
+    return {
+        id,
+        username: user.username,
+        password: user.password
+    };
+};
