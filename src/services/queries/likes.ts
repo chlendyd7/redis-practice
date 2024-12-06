@@ -1,13 +1,18 @@
 import { client } from "$services/redis";
 import { userLikesKey, itemsKey } from "$services/keys";
 import { insert } from "svelte/internal";
-
+import { getItems } from "./items";
 
 export const userLikesItem = async (itemId: string, userId: string) => {
     return client.sIsMember(userLikesKey(userId), itemId);
 };
 
-export const likedItems = async (userId: string) => {};
+export const likedItems = async (userId: string) => {
+    // 아이템 집합에서 좋아요를 가져와야함
+    const ids = await client.sMembers(userLikesKey(userId));
+
+    return getItems(ids);
+};
 
 export const likeItem = async (itemId: string, userId: string) => {
     const inserted = await client.sAdd(userLikesKey(userId), itemId);
