@@ -1,6 +1,6 @@
 import { itemsByViewsKey, itemsKey } from "$services/keys";
 import { client } from "$services/redis";
-
+import { deserialize } from "./deserialize";
 
 export const itemsByViews = async (order: 'DESC' | 'ASC' = 'DESC', offset = 0, count = 10) => {
     const results = await client.sort(
@@ -11,7 +11,12 @@ export const itemsByViews = async (order: 'DESC' | 'ASC' = 'DESC', offset = 0, c
                 `${itemsKey('*')}->name`,
                 `${itemsKey('*')}->views`,
             ],
-            BY: 'score'
+            BY: 'nosort',
+            DIRECTION: order,
+            LIMIT: {
+                offset,
+                count
+            }
         }
     );
 
