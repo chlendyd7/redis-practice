@@ -6,6 +6,8 @@ import { getItem } from './items';
 
 export const createBid = async (attrs: CreateBidAttrs) => {
 	return client.executeIsolated(async (isolatedClient) => {
+		await isolatedClient.watch(itemsKey(attrs.itemId));
+
 		const item = await getItem(attrs.itemId);
 
 		if (!item) {
@@ -23,14 +25,14 @@ export const createBid = async (attrs: CreateBidAttrs) => {
 			attrs.createdAt.toMillis()
 		);
 
-		Promise.all([
-			client.rPush(bidHistoryKey(attrs.itemId), serialized),
-			client.hSet(itemsKey(item.id), {
+		return isolatedClient.multi()
+			.rPush(bidHistoryKey(attrs.itemId), serialized)
+			.hSet(itemsKey(item.id), {
 				bids:item.bids + 1,
 				price: attrs.amount,
 				highestBidUserId: attrs.userId
-			})
-		])
+		})
+		.exec();
 	});
 };
 
