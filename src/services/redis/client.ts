@@ -33,7 +33,7 @@ const client = createClient({
 
 				if inserted == 1 then
 					redis.call('HINCRBY', itemsKey, 'views', 1)
-					redis.call('ZINCRBY', itemsByViewsKey, 1,)
+					redis.call('ZINCRBY', itemsByViewsKey, 1, itemId)
 				end
 			`,
 			transformArguments(itemId: string, userId: string) {
