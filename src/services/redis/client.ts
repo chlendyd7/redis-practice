@@ -44,9 +44,9 @@ const client = createClient({
 					itemId,
 					userId
 				];
-
 				// EVALSHA ID 3
-			}
+			},
+			transformReply() {}
 		})
 	}
 });
