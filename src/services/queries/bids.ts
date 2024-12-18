@@ -5,6 +5,11 @@ import { DateTime } from 'luxon';
 import { getItem } from './items';
 
 export const createBid = async (attrs: CreateBidAttrs) => {
+	return withLock(attrs.itemId, async () => {
+		
+	});
+
+
 	return client.executeIsolated(async (isolatedClient) => {
 		await isolatedClient.watch(itemsKey(attrs.itemId));
 
