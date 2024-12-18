@@ -11,3 +11,8 @@ export const incrementView = async (itemId: string, userId: string) => {
         ]);
     }
 };
+
+// Keys I need to access
+// 1) itemsViewsKey
+// 2) itemKey
+// 3) items By Views Key
